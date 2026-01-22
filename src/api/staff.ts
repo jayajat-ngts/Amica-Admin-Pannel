@@ -74,6 +74,11 @@ export interface UpdateStaffStatusPayload {
   status: "active" | "disabled";
 }
 
+export interface UpdateRolePayload {
+  name: string;
+  permissions: string[];
+}
+
 
 
 /* =========================
@@ -204,6 +209,45 @@ export const updateStaffStatusApi = async (
     throw new Error(
       res.data?.message || "Failed to update staff status"
     );
+  }
+
+  return res.data.data;
+};
+/**
+ * GET /api/admin/staff/:id
+ * Get single staff by ID
+ */
+export const getStaffByIdApi = async (
+  staffId: string
+): Promise<Staff> => {
+  const res = await api.get<ApiEnvelope<Staff>>(
+    `/api/admin/staff/${staffId}`
+  );
+
+  if (!res.data?.success) {
+    throw new Error(
+      res.data?.message || "Failed to fetch staff details"
+    );
+  }
+
+  return res.data.data;
+};
+
+/**
+ * PATCH /api/admin/roles/:id
+ * Update role name & permissions
+ */
+export const updateRoleApi = async (
+  roleId: string,
+  payload: UpdateRolePayload
+) => {
+  const res = await api.patch<ApiEnvelope<any>>(
+    `/api/admin/roles/${roleId}`,
+    payload
+  );
+
+  if (!res.data?.success) {
+    throw new Error(res.data?.message || "Failed to update role");
   }
 
   return res.data.data;

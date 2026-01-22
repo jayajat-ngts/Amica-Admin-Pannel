@@ -31,6 +31,7 @@ import Staff from "./pages/Staff/page";
 import CreateStaffPage from "./components/staff/CreateStaff";
 import RoleManagementPage from "./components/staff/StaffRole";
 import ChatHistoryPage from "./components/chat/ChatHistory";
+import EditStaffPage from "./components/staff/EditStaff";
 
 export default function App() {
   const ready = useAppSelector(selectAuthReady);
@@ -57,6 +58,8 @@ export default function App() {
              <Route path="/staff" element={<Staff />} />
              <Route path="/staff/create" element={<CreateStaffPage />} />
               <Route path="/staff/role" element={<RoleManagementPage />} />
+              <Route path="/staff/edit/:id" element={<EditStaffPage />} />
+
             <Route path="/chat" element={<ChatHistoryPage />} />
             {/* Tables */}
             <Route path="/matches" element={<Matches />} />
