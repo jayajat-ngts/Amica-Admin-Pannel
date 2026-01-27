@@ -152,7 +152,7 @@ export const createRoleApi = async (
  */
 export const getPermissionsApi = async (): Promise<Permission[]> => {
   const res = await api.get<ApiEnvelope<Permission[]>>(
-    "/api/admin/permission" // ✅ FIXED (plural)
+    "/api/admin/roles/permission" // ✅ FIXED (plural)
   );
 
   if (!res.data?.success) {

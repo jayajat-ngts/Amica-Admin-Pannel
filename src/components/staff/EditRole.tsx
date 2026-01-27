@@ -18,7 +18,14 @@ interface Props {
   }) => void;
 }
 
-const MODULES = ["Users", "Staff", "Roles", "Permissions", "Settings", "Audit Logs"];
+const MODULES = [
+  "Users",
+  "Staff",
+  "Roles",
+  "Permissions",
+  "Settings",
+  "Audit Logs",
+];
 
 const EditRoleModal: React.FC<Props> = ({ role, onClose, onSave }) => {
   const [roleName, setRoleName] = useState(role.name);
@@ -49,9 +56,11 @@ const EditRoleModal: React.FC<Props> = ({ role, onClose, onSave }) => {
 
     permissions.forEach((row) => {
       if (row.view) finalPermissions.push(`${row.module.toLowerCase()}.view`);
-      if (row.create) finalPermissions.push(`${row.module.toLowerCase()}.create`);
+      if (row.create)
+        finalPermissions.push(`${row.module.toLowerCase()}.create`);
       if (row.edit) finalPermissions.push(`${row.module.toLowerCase()}.edit`);
-      if (row.delete) finalPermissions.push(`${row.module.toLowerCase()}.delete`);
+      if (row.delete)
+        finalPermissions.push(`${row.module.toLowerCase()}.delete`);
     });
 
     onSave({
@@ -61,18 +70,20 @@ const EditRoleModal: React.FC<Props> = ({ role, onClose, onSave }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
-      <div className="w-full max-w-4xl rounded-2xl bg-white shadow-xl p-6 relative">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+      <div className="relative w-full max-w-4xl rounded-2xl bg-white shadow-xl p-6">
 
-        {/* Close */}
+        {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+          className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 text-xl"
         >
           ✕
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">Edit Role</h2>
+        <h2 className="text-xl font-semibold mb-6">
+          Update role name and permissions
+        </h2>
 
         {/* Role Name */}
         <div className="mb-6">
@@ -100,19 +111,19 @@ const EditRoleModal: React.FC<Props> = ({ role, onClose, onSave }) => {
               {permissions.map((row, i) => (
                 <tr key={row.module} className="border-t">
                   <td className="p-3 font-medium">{row.module}</td>
-                  {(["view", "create", "edit", "delete"] as const).map((key) => (
-                    <td key={key} className="p-3 text-center">
-                      {row[key] !== undefined ? (
+
+                  {(["view", "create", "edit", "delete"] as const).map(
+                    (key) => (
+                      <td key={key} className="p-3 text-center">
                         <input
                           type="checkbox"
                           checked={row[key]}
                           onChange={() => toggle(i, key)}
+                          className="h-4 w-4 accent-indigo-600"
                         />
-                      ) : (
-                        "-"
-                      )}
-                    </td>
-                  ))}
+                      </td>
+                    )
+                  )}
                 </tr>
               ))}
             </tbody>
