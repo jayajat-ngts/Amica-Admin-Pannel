@@ -65,37 +65,7 @@ const StaffListPage: React.FC = () => {
 
   {/* Inner Table Card */}
   <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-    {loading ? (
-      <div className="py-16 text-center text-gray-500">
-        Loading users...
-      </div>
-    ) : staffList.length === 0 ? (
-      <div className="py-16 flex flex-col items-center justify-center">
-        {/* Error Icon */}
-        <div className="mb-4">
-          <svg
-            className="w-12 h-12 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeWidth={1.5}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 9v3m0 3h.01M10.29 3.86l-8.18 14.18A1.5 1.5 0 003.4 21h17.2a1.5 1.5 0 001.29-2.96L13.71 3.86a1.5 1.5 0 00-2.42 0z"
-            />
-          </svg>
-        </div>
 
-        <p className="text-lg font-medium text-gray-700">
-          No users found
-        </p>
-        <p className="text-sm text-gray-500 mt-1">
-          staff will appear here once they created
-        </p>
-      </div>
-    ) : (
       <table className="min-w-full">
         <thead className="bg-gray-50">
           <tr>
@@ -124,90 +94,107 @@ const StaffListPage: React.FC = () => {
           </tr>
         </thead>
 
-        <tbody className="divide-y divide-gray-100">
-          {staffList.map((staff, index) => (
-            <tr key={staff.id} className="hover:bg-gray-50">
-              <td className="px-6 py-4 text-gray-600">
-                {index + 1}
-              </td>
+         <tbody className="divide-y divide-gray-100">
+  {/* Loading */}
+  {loading && (
+    <tr>
+      <td colSpan={7} className="py-16 text-center text-gray-500">
+        Loading users...
+      </td>
+    </tr>
+  )}
 
-              <td className="px-6 py-4 font-medium text-gray-900">
-                {staff.name}
-              </td>
+  {/* No Data */}
+  {!loading && staffList.length === 0 && (
+    <tr>
+      <td colSpan={7} className="py-16 text-center">
+        <div className="flex flex-col items-center">
+          <svg
+            className="w-12 h-12 text-gray-400 mb-3"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeWidth={1.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 9v3m0 3h.01M10.29 3.86l-8.18 14.18A1.5 1.5 0 003.4 21h17.2a1.5 1.5 0 001.29-2.96L13.71 3.86a1.5 1.5 0 00-2.42 0z"
+            />
+          </svg>
 
-              <td className="px-6 py-4 text-gray-700">
-                {staff.roles.map((r) => r.name).join(", ")}
-              </td>
+          <p className="text-lg font-medium text-gray-700">
+            No users found
+          </p>
+          <p className="text-sm text-gray-500">
+            Staff will appear here once created
+          </p>
+        </div>
+      </td>
+    </tr>
+  )}
 
-              <td className="px-6 py-4 text-gray-700">
-                {staff.mobile_no || "-"}
-              </td>
+  {/* Data Rows */}
+  {!loading &&
+    staffList.map((staff, index) => (
+      <tr key={staff.id} className="hover:bg-gray-50">
+        <td className="px-6 py-4 text-gray-600">
+          {index + 1}
+        </td>
 
-              <td className="px-6 py-4 text-gray-700">
-                {staff.email}
-              </td>
+        <td className="px-6 py-4 font-medium text-gray-900">
+          {staff.name}
+        </td>
 
-              {/* Toggle */}
-              <td className="px-6 py-4 text-center">
-                <button
-                  onClick={() =>
-                    handleStatusToggle(staff.id, staff.status)
-                  }
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
-                    staff.status === "active"
-                      ? "bg-green-500"
-                      : "bg-gray-300"
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
-                      staff.status === "active"
-                        ? "translate-x-6"
-                        : "translate-x-1"
-                    }`}
-                  />
-                </button>
-              </td>
-                  {/* ✅ Actions */}
-     <td className="p-3">
-  <button
-    onClick={() => navigate(`/staff/edit/${staff.id}`)}
-    className="
-      inline-flex items-center gap-2
-      px-3 py-1.5
-      text-sm font-medium
-      text-indigo-600
-      border border-indigo-200
-      rounded-lg
-      hover:bg-indigo-50 hover:border-indigo-300
-      transition
-    "
-  >
-    {/* Edit Icon */}
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-4 w-4"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-      />
-    </svg>
+        <td className="px-6 py-4 text-gray-700">
+          {staff.roles.map((r) => r.name).join(", ")}
+        </td>
 
-    Edit
-  </button>
-</td>
+        <td className="px-6 py-4 text-gray-700">
+          {staff.mobile_no || "-"}
+        </td>
 
-            </tr>
-          ))}
-        </tbody>
+        <td className="px-6 py-4 text-gray-700">
+          {staff.email}
+        </td>
+
+        {/* Status Toggle */}
+        <td className="px-6 py-4 text-center">
+          <button
+            onClick={() =>
+              handleStatusToggle(staff.id, staff.status)
+            }
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
+              staff.status === "active"
+                ? "bg-green-500"
+                : "bg-gray-300"
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                staff.status === "active"
+                  ? "translate-x-6"
+                  : "translate-x-1"
+              }`}
+            />
+          </button>
+        </td>
+
+        {/* Action */}
+        <td className="px-6 py-4 text-center">
+          <button
+            onClick={() => navigate(`/staff/edit/${staff.id}`)}
+            className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50 transition"
+          >
+            ✏️ Edit
+          </button>
+        </td>
+      </tr>
+    ))}
+</tbody>
+
       </table>
-    )}
+    
   </div>
 
   {/* Pagination Footer */}

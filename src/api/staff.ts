@@ -80,6 +80,14 @@ export interface UpdateRolePayload {
 }
 
 
+export interface UpdateStaffPayload {
+  name: string;
+  email: string;        // ✅ ADD
+  mobile_no: string;
+  password?: string;
+  roles: string[];
+}
+
 
 /* =========================
    API Calls
@@ -237,17 +245,38 @@ export const getStaffByIdApi = async (
  * PATCH /api/admin/roles/:id
  * Update role name & permissions
  */
+/**
+ * PUT /api/admin/roles/:id
+ * Update role name & permissions
+ */
 export const updateRoleApi = async (
   roleId: string,
   payload: UpdateRolePayload
 ) => {
-  const res = await api.patch<ApiEnvelope<any>>(
+  const res = await api.put<ApiEnvelope<any>>(
     `/api/admin/roles/${roleId}`,
     payload
   );
 
   if (!res.data?.success) {
     throw new Error(res.data?.message || "Failed to update role");
+  }
+
+  return res.data.data;
+};
+export const updateStaffApi = async (
+  staffId: string,
+  payload: UpdateStaffPayload
+) => {
+  const res = await api.put<ApiEnvelope<Staff>>(
+    `/api/admin/staff/${staffId}`,
+    payload
+  );
+
+  if (!res.data?.success) {
+    throw new Error(
+      res.data?.message || "Failed to update staff"
+    );
   }
 
   return res.data.data;
