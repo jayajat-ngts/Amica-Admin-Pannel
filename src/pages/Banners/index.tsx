@@ -7,7 +7,7 @@ export default function Banners() {
   return (
     <>
       <PageMeta
-        title="Wizplay Dashboard | Banner Management"
+        title="Amica AI  Admin Dashboard | Amica Management"
         description="Manage promotional banners for the application."
       />
       <PageBreadcrumb pageTitle="Banners" />
