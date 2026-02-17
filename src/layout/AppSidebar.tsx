@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
-import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
+import {  ClipboardDocumentListIcon,
+  ChatBubbleLeftRightIcon,
+  CreditCardIcon, } from "@heroicons/react/24/outline";
 // Assume these icons are imported from your icon library
 import {
   BellIcon,
@@ -45,13 +47,23 @@ const navItems: NavItem[] = [
   
 },
 // { icon: <UserCircleIcon />, name: "Chat", path: "/chat" },
-
-{ 
-  icon: <ChatBubbleLeftRightIcon className="w-5 h-5" />, 
-  name: "Chat", 
-  path: "/chat" 
+{
+  icon: <ClipboardDocumentListIcon className="w-5 h-5" />,
+  name: "Audit Logs",
+  path: "/audit",
 },
 
+{
+  icon: <ChatBubbleLeftRightIcon className="w-5 h-5" />,
+  name: "Chat",
+  path: "/chat",
+},
+
+{
+  icon: <CreditCardIcon className="w-5 h-5" />,
+  name: "Subscription",
+  path: "/subscription",
+},
   { icon: <CalenderIcon />, name: "Match", path: "/matches" },
   { icon: <TrophyIcon />, name: "Contest", path: "/contest" },
   { icon: <ListIcon />, name: "Questions", path: "/questions" },

@@ -30,8 +30,13 @@ import Banners from "./pages/Banners";
 import Staff from "./pages/Staff/page";
 import CreateStaffPage from "./components/staff/CreateStaff";
 import RoleManagementPage from "./components/staff/StaffRole";
-import ChatHistoryPage from "./components/chat/ChatHistory";
+
 import EditStaffPage from "./components/staff/EditStaff";
+import EditRolePage from "./components/staff/EditRole";
+import AuditLogsPage from "./components/auditlog/AuditLog";
+import ChatUsersPage from "./components/chat/ChatHistory";
+import ChatHistoryDetailPage from "./components/chat/ChatDetail";
+import SubscriptionPlansPage from "./pages/Subscription/SubscriptionPlansPage";
 
 export default function App() {
   const ready = useAppSelector(selectAuthReady);
@@ -59,8 +64,11 @@ export default function App() {
              <Route path="/staff/create" element={<CreateStaffPage />} />
               <Route path="/staff/role" element={<RoleManagementPage />} />
               <Route path="/staff/edit/:id" element={<EditStaffPage />} />
-
-            <Route path="/chat" element={<ChatHistoryPage />} />
+         <Route path="/staff/role/edit/:id" element={<EditRolePage />} />
+          <Route path="/audit" element={<AuditLogsPage />} />
+            <Route path="/chat" element={<ChatUsersPage />} />
+               <Route path="/chat-detail" element={<ChatHistoryDetailPage />} />
+                <Route path="/subscription" element={<SubscriptionPlansPage />} />
             {/* Tables */}
             <Route path="/matches" element={<Matches />} />
             <Route path="/live-score/:matchId" element={<LiveScore />} />

@@ -1,12 +1,13 @@
 import React from 'react'
-import ChatHistoryPage from '../../components/chat/ChatHistory'
+import ChatUsersPage from '../../components/chat/ChatHistory'
+
 
 
 
 function Chat() {
   return (
     <div>
-      <ChatHistoryPage/>  
+      <ChatUsersPage/>  
   
     </div>
   )

@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-// import { getRolesApi, getStaffApi, Role, updateStaffStatusApi } from "../../api/staff";
 import {
   getRolesApi,
-  getStaffByIdApi, // ✅ ADD THIS
+  getStaffByIdApi,
   Role,
-  updateStaffStatusApi,
+  updateStaffApi, // ✅ CORRECT API
 } from "../../api/staff";
-
 
 const EditStaffPage: React.FC = () => {
   const navigate = useNavigate();
@@ -27,54 +25,59 @@ const EditStaffPage: React.FC = () => {
   });
 
   /* ================= Fetch staff + roles ================= */
-useEffect(() => {
-  if (!id) return;
+  useEffect(() => {
+    if (!id) return;
 
-  const init = async () => {
-    try {
-      setLoading(true);
+    const init = async () => {
+      try {
+        setLoading(true);
 
-      const [rolesRes, staff] = await Promise.all([
-        getRolesApi(),
-        getStaffByIdApi(id), // ✅ DIRECT API CALL
-      ]);
+        const [rolesRes, staff] = await Promise.all([
+          getRolesApi(),
+          getStaffByIdApi(id),
+        ]);
 
-      // ✅ only active roles
-      setRoles(rolesRes.filter((r) => r.is_active));
+        setRoles(rolesRes.filter((r) => r.is_active));
 
-      setFormData({
-        name: staff.name,
-        email: staff.email,
-        mobile_no: staff.mobile_no || "",
-        password: "",
-        roles: staff.roles.map((r) => r._id),
-      });
-    } catch (err) {
-      console.error("Failed to load staff", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+        setFormData({
+          name: staff.name,
+          email: staff.email,
+          mobile_no: staff.mobile_no || "",
+          password: "",
+          roles: staff.roles.map((r) => r._id),
+        });
+      } catch (err) {
+        console.error("Failed to load staff", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  init();
-}, [id]);
-
+    init();
+  }, [id]);
 
   const filteredRoles = roles.filter((r) =>
     r.name.toLowerCase().includes(roleSearch.toLowerCase())
   );
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((p) => ({ ...p, [name]: value }));
   };
 
+  /* ================= SAVE STAFF ================= */
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      await updateStaffStatusApi(id!, formData);
+
+      await updateStaffApi(id!, {
+        name: formData.name,
+        email: formData.email,               // ✅ EMAIL UPDATE
+        mobile_no: formData.mobile_no,
+        password: formData.password || undefined,
+        roles: formData.roles,
+      });
+
       navigate("/staff");
     } catch (err: any) {
       alert(err.message || "Failed to update staff");
@@ -84,11 +87,9 @@ useEffect(() => {
   };
 
   return (
-    /* ===== Overlay ===== */
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
-      {/* ===== Modal Card ===== */}
       <div className="relative w-full max-w-3xl rounded-2xl bg-white shadow-xl p-8">
-        
+
         {/* Close */}
         <button
           onClick={() => navigate("/staff")}
@@ -97,17 +98,12 @@ useEffect(() => {
           ✕
         </button>
 
-        {/* Header */}
-        <h2 className="text-2xl font-bold text-center">
-          Edit Staff
-        </h2>
+        <h2 className="text-2xl font-bold text-center">Edit Staff</h2>
         <p className="text-gray-500 text-center mb-8">
           Update staff details and role
         </p>
 
-        {/* Form */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          
           {/* Name */}
           <div>
             <label className="text-sm font-medium">Full Name</label>
@@ -115,18 +111,18 @@ useEffect(() => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="mt-1 w-full rounded-xl border px-4 py-2 focus:ring-2 focus:ring-indigo-500"
+              className="mt-1 w-full rounded-xl border px-4 py-2"
             />
           </div>
 
-          {/* Email */}
+          {/* Email (NOW EDITABLE) */}
           <div>
             <label className="text-sm font-medium">Email Address</label>
             <input
               name="email"
               value={formData.email}
-              disabled
-              className="mt-1 w-full rounded-xl border bg-gray-100 px-4 py-2"
+              onChange={handleChange}
+              className="mt-1 w-full rounded-xl border px-4 py-2"
             />
           </div>
 
@@ -137,22 +133,20 @@ useEffect(() => {
               name="mobile_no"
               value={formData.mobile_no}
               onChange={handleChange}
-              className="mt-1 w-full rounded-xl border px-4 py-2 focus:ring-2 focus:ring-indigo-500"
+              className="mt-1 w-full rounded-xl border px-4 py-2"
             />
           </div>
 
           {/* Password */}
           <div>
-            <label className="text-sm font-medium">
-              Password (optional)
-            </label>
+            <label className="text-sm font-medium">Password (optional)</label>
             <div className="relative mt-1">
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full rounded-xl border px-4 py-2 pr-10 focus:ring-2 focus:ring-indigo-500"
+                className="w-full rounded-xl border px-4 py-2 pr-10"
               />
               <button
                 type="button"
@@ -169,12 +163,10 @@ useEffect(() => {
             <label className="text-sm font-medium">Assign Role</label>
 
             {formData.roles[0] && (
-              <div className="mt-2 mb-2 inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 text-sm text-indigo-700">
+              <div className="mt-2 mb-2 inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 text-sm">
                 {roles.find((r) => r.id === formData.roles[0])?.name}
                 <button
-                  onClick={() =>
-                    setFormData((p) => ({ ...p, roles: [] }))
-                  }
+                  onClick={() => setFormData((p) => ({ ...p, roles: [] }))}
                 >
                   ✕
                 </button>
@@ -185,20 +177,17 @@ useEffect(() => {
               placeholder="Search role..."
               value={roleSearch}
               onChange={(e) => setRoleSearch(e.target.value)}
-              className="mt-1 w-full rounded-xl border px-4 py-2 focus:ring-2 focus:ring-indigo-500"
+              className="mt-1 w-full rounded-xl border px-4 py-2"
             />
 
             {roleSearch && (
-              <div className="mt-2 max-h-40 overflow-y-auto rounded-xl border bg-white shadow">
+              <div className="mt-2 max-h-40 overflow-y-auto rounded-xl border">
                 {filteredRoles.map((role) => (
                   <button
                     key={role.id}
                     className="w-full px-4 py-2 text-left hover:bg-indigo-50"
                     onClick={() => {
-                      setFormData((p) => ({
-                        ...p,
-                        roles: [role.id],
-                      }));
+                      setFormData((p) => ({ ...p, roles: [role.id] }));
                       setRoleSearch("");
                     }}
                   >
@@ -221,7 +210,7 @@ useEffect(() => {
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="rounded-xl bg-indigo-600 px-6 py-2 text-white hover:bg-indigo-700"
+            className="rounded-xl bg-indigo-600 px-6 py-2 text-white"
           >
             {loading ? "Saving..." : "Save Changes"}
           </button>

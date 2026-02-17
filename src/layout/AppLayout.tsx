@@ -15,8 +15,9 @@ const LayoutContent: React.FC = () => {
   // ✅ routes where sidebar + header should be hidden
   const hideSidebar =
     location.pathname.startsWith("/staff/create") ||
-    location.pathname.startsWith("/staff/edit") 
-  
+    location.pathname.startsWith("/staff/edit") ||
+    location.pathname.startsWith("/staff/role/edit");
+    
 
   return (
     <div className="min-h-screen xl:flex bg-gray-50">

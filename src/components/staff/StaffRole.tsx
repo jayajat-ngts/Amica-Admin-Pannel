@@ -7,6 +7,7 @@ import {
   updateRoleStatusApi,
   updateRoleApi,
 } from "../../api/staff";
+import { useNavigate } from "react-router";
 
 /* ================= Types ================= */
 interface Role {
@@ -23,6 +24,8 @@ interface EditRoleModalProps {
   onClose: () => void;
   onSave: (payload: { name: string; permissions: string[] }) => void;
 }
+
+
 
 const EditRoleModal: React.FC<EditRoleModalProps> = ({
   role,
@@ -147,14 +150,13 @@ const EditRoleModal: React.FC<EditRoleModalProps> = ({
 
 /* ================= Main Component ================= */
 const RoleManagementPage: React.FC = () => {
+  const navigate = useNavigate();
   const [roles, setRoles] = useState<Role[]>([]);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [roleName, setRoleName] = useState("");
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
 
   /* ================= Fetch Data ================= */
   useEffect(() => {
@@ -309,15 +311,13 @@ const RoleManagementPage: React.FC = () => {
                   </button>
                 </td>
                 <td className="p-3">
-                  <button
-                    onClick={() => {
-                      setSelectedRole(role);
-                      setShowEditModal(true);
-                    }}
-                    className="rounded-lg bg-indigo-50 px-3 py-1 text-indigo-600 hover:bg-indigo-100"
-                  >
-                    ✏️ Edit
-                  </button>
+                 <button
+  onClick={() => navigate(`/staff/role/edit/${role.id}`)}
+  className="rounded-lg bg-indigo-50 px-3 py-1 text-indigo-600 hover:bg-indigo-100"
+>
+  ✏️ Edit
+</button>
+
                 </td>
               </tr>
             ))}
@@ -326,7 +326,7 @@ const RoleManagementPage: React.FC = () => {
       </div>
 
       {/* ================= Edit Modal ================= */}
-      {showEditModal && selectedRole && (
+      {/* {showEditModal && selectedRole && (
         <EditRoleModal
           role={selectedRole}
           permissions={permissions}
@@ -338,7 +338,7 @@ const RoleManagementPage: React.FC = () => {
             setShowEditModal(false);
           }}
         />
-      )}
+      )} */}
     </div>
   );
 };
